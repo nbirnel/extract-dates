@@ -1,0 +1,49 @@
+#!/usr/bin/ruby
+
+$y = /(19|20|')?[0-9][0-9]/      #19 or 20 plus 2 digits
+$m = /(0?[1-9])/
+#$m = /(0?[1-9])|(1[012])/      #1-12, optionally zero-padded
+#$d = /(0?[1-9])|([12][0-9])|(3[0-1])/   #1-31, optionally zero-padded
+raw1 = /([023]?1)([Ss][Tt])?/    
+raw2 = /([02]?2)([Nn][Dd])?/   
+raw3 = /([02]?3)([Rr][Dd])?/   
+rawth = /(([02]?[4-9])|(1[1-9])|([123]0))([Tt][Hh])?/   
+$d = /#{raw1}|#{raw2}|#{raw3}/
+
+
+$sy = /\b#{$y}\b/
+$sm = /\b#{$m}\b/
+$sd = /\b#{$d}\b/
+
+$datefmts = Hash.new
+
+$hy = /-/
+
+$onedate = /#{$m}#{$hy}#{$d}#{$hy}#{$y}/
+
+while line = gets() do
+    #$datefmt.each do |fmt, meth|
+    #    checkfmt(fmt, meth)
+    #end
+    if $d =~ line
+        puts line
+        puts 'd'
+    end
+    if $hy =~ line
+        puts line
+        puts 'hy'
+    end
+    if $m =~ line
+        puts line
+        puts 'month'
+    end
+    if $y =~ line
+        puts line
+        puts 'year'
+    end
+    if $onedate =~ line
+        puts line
+        puts 'date'
+    end
+end
+
