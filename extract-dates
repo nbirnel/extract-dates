@@ -4,20 +4,22 @@
 $hy = '[- .\\/]'
 
 $y = '((19|20|\')?[0-9][0-9])'      #19 or 20 plus 2 digits
+
+
 $m = '((0?[1-9])|(1[012]))'      #1-12, optionally zero-padded
-raw1 = '([023]?1)([Ss][Tt])?'    
-raw2 = '([02]?2)([Nn][Dd])?'   
-raw3 = '([02]?3)([Rr][Dd])?'   
-rawth = '(([02]?[4-9])|(1[1-9])|([123]0))([Tt][Hh])?'   
+raw1 = '([023]?1)(st)?'    
+raw2 = '([02]?2)(nd)?'   
+raw3 = '([02]?3)(rd)?'   
+rawth = '(([02]?[4-9])|(1[1-9])|([123]0))(th)?'   
 $d = "((#{raw1})|(#{raw2})|(#{raw3})|(#{rawth}))"
 
 $datefmt = {
-    yyyy_mm_dd: Regexp.new('\b' + $y + $hy + $m + $hy + $d + '\b'),
-    yyyy_dd_mm: Regexp.new('\b' + $y + $hy + $d + $hy + $m + '\b'),
-    dd_yyyy_mm: Regexp.new('\b' + $d + $hy + $y + $hy + $m + '\b'),
-    dd_mm_yyyy: Regexp.new('\b' + $d + $hy + $m + $hy + $y + '\b'),
-    mm_dd_yyyy: Regexp.new('\b' + $m + $hy + $d + $hy + $y + '\b'),
-    mm_yyyy_dd: Regexp.new('\b' + $m + $hy + $y + $hy + $d + '\b'),
+    yyyy_mm_dd: Regexp.new('\b' + $y + $hy + $m + $hy + $d + '\b', true),
+    yyyy_dd_mm: Regexp.new('\b' + $y + $hy + $d + $hy + $m + '\b', true),
+    dd_yyyy_mm: Regexp.new('\b' + $d + $hy + $y + $hy + $m + '\b', true),
+    dd_mm_yyyy: Regexp.new('\b' + $d + $hy + $m + $hy + $y + '\b', true),
+    mm_dd_yyyy: Regexp.new('\b' + $m + $hy + $d + $hy + $y + '\b', true),
+    mm_yyyy_dd: Regexp.new('\b' + $m + $hy + $y + $hy + $d + '\b', true),
 }
 
 while line = gets() do
