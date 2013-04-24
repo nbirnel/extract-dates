@@ -19,24 +19,30 @@ def parse_day(d)
     return d
 end
 
+def parse_month(m)
+    return $months.key(m)
+end
+
 $hy = ',?[- .\\/]'
 
-$y = '(?<year>(19|20|[\'`])?[0-9][0-9])'      #19, 20, or ',  plus 2 digits
+$y = '(?<year>(19|20|[\'`])?[0-9][0-9])'  #19 or 20 or ` or ',  plus 2 digits
 
-$jan = '(?<m_jan>0?1|january|jan)'
-$feb = '(?<m_feb>0?2|february|feb)'
-$mar = '(?<m_mar>0?3|march|mar)'
-$apr = '(?<m_apr>0?4|april|apr)'
-$may = '(?<m_may>0?5|may|may)'
-$jun = '(?<m_jun>0?6|june|jun)'
-$jul = '(?<m_jul>0?7|july|jul)'
-$aug = '(?<m_aug>0?8|august|aug)'
-$sep = '(?<m_sep>0?9|september|sep|sept)'
-$oct = '(?<m_oct>10|october|oct)'
-$nov = '(?<m_nov>11|november|nov)'
-$dec = '(?<m_dec>12|december|dec)'
+$months = {
+    1 =>  '(?<m_01>0?1|january|jan)',
+    2 =>  '(?<m_02>0?2|february|feb)',
+    3 =>  '(?<m_03>0?3|march|mar)',
+    4 =>  '(?<m_04>0?4|april|apr)',
+    5 =>  '(?<m_05>0?5|may|may)',
+    6 =>  '(?<m_06>0?6|june|jun)',
+    7 =>  '(?<m_07>0?7|july|jul)',
+    8 =>  '(?<m_08>0?8|august|aug)',
+    9 =>  '(?<m_09>0?9|september|sep|sept)',
+    10 => '(?<m_10>10|october|oct)',
+    11 => '(?<m_11>11|november|nov)',
+    12 => '(?<m_12>12|december|dec)',
+}
 
-$m = "(?<month>#{$jan}|#{$feb}|#{$mar}|#{$apr}|#{$may}|#{$jun}|#{$jul}|#{$aug}|#{$sep}|#{$oct}|#{$nov}|#{$dec})"
+$m = "(?<month>#{$months[1]}|#{$months[2]}|#{$months[3]}|#{$months[4]}|#{$months[5]}|#{$months[6]}|#{$months[7]}|#{$months[8]}|#{$months[9]}|#{$months[10]}|#{$months[11]}|#{$months[12]})"
 
 $d01 = '(?<d_01>0?1(st)?)'
 $d02 = '(?<d_02>0?2(nd)?)'
@@ -84,9 +90,25 @@ $datefmt = {
 while line = gets() do
     $datefmt.each do |fmt, re|
         if ( re =~ line )
-            year = parse_year($~[:year])
-            day = parse_day($~[:day])
-            puts "#{$~}: #{fmt}: #{year}-#{$~[:month]}-#{day}: #{line}"
+            match = Regexp.last_match
+            year = $~[:year]
+            month = $~[:month]
+            day = $~[:day]
+            found = $~
+
+            match.captures.each_with_index do |cap, i|
+                if cap.nil?
+                else
+                    if match.names[i] =~ /^m_/
+                        month = match.names[i].to_s
+                        month.sub!(/^m_(0)?/, "")
+                    end
+                end
+            end
+
+            year = parse_year(year)
+            day = parse_day(day)
+            puts "#{found}: #{fmt}: #{year}-#{month}-#{day}: #{line}"
         end
     end
 end
