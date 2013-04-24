@@ -20,7 +20,20 @@ def parse_day(d)
 end
 
 def parse_month(m)
-    return $months.key(m)
+    m.captures.each_with_index do |cap, i|
+        if cap.nil?
+        else
+            if m.names[i] =~ /^m_/
+                month = m.names[i].to_s
+                month.sub!(/^m_/, "")
+                return month
+            end
+        end
+    end
+end
+
+def printout(a)
+    puts "#{a[:date_str]}: #{a[:fmt]}: #{a[:year]}-#{a[:month]}-#{a[:day]}: #{a[:line]}"
 end
 
 $hy = ',?[- .\\/]'
@@ -28,15 +41,15 @@ $hy = ',?[- .\\/]'
 $y = '(?<year>(19|20|[\'`])?[0-9][0-9])'  #19 or 20 or ` or ',  plus 2 digits
 
 $months = {
-    1 =>  '(?<m_01>0?1|january|jan)',
-    2 =>  '(?<m_02>0?2|february|feb)',
-    3 =>  '(?<m_03>0?3|march|mar)',
-    4 =>  '(?<m_04>0?4|april|apr)',
-    5 =>  '(?<m_05>0?5|may|may)',
-    6 =>  '(?<m_06>0?6|june|jun)',
-    7 =>  '(?<m_07>0?7|july|jul)',
-    8 =>  '(?<m_08>0?8|august|aug)',
-    9 =>  '(?<m_09>0?9|september|sep|sept)',
+    1 =>  '(?<m_1>0?1|january|jan)',
+    2 =>  '(?<m_2>0?2|february|feb)',
+    3 =>  '(?<m_3>0?3|march|mar)',
+    4 =>  '(?<m_4>0?4|april|apr)',
+    5 =>  '(?<m_5>0?5|may|may)',
+    6 =>  '(?<m_6>0?6|june|jun)',
+    7 =>  '(?<m_7>0?7|july|jul)',
+    8 =>  '(?<m_8>0?8|august|aug)',
+    9 =>  '(?<m_9>0?9|september|sep|sept)',
     10 => '(?<m_10>10|october|oct)',
     11 => '(?<m_11>11|november|nov)',
     12 => '(?<m_12>12|december|dec)',
@@ -44,15 +57,15 @@ $months = {
 
 $m = "(?<month>#{$months[1]}|#{$months[2]}|#{$months[3]}|#{$months[4]}|#{$months[5]}|#{$months[6]}|#{$months[7]}|#{$months[8]}|#{$months[9]}|#{$months[10]}|#{$months[11]}|#{$months[12]})"
 
-$d01 = '(?<d_01>0?1(st)?)'
-$d02 = '(?<d_02>0?2(nd)?)'
-$d03 = '(?<d_03>0?3(rd)?)'
-$d04 = '(?<d_04>0?4(th)?)'
-$d05 = '(?<d_05>0?5(th)?)'
-$d06 = '(?<d_06>0?6(th)?)'
-$d07 = '(?<d_07>0?7(th)?)'
-$d08 = '(?<d_08>0?8(th)?)'
-$d09 = '(?<d_09>0?9(th)?)'
+$d01 = '(?<d_1>0?1(st)?)'
+$d02 = '(?<d_2>0?2(nd)?)'
+$d03 = '(?<d_3>0?3(rd)?)'
+$d04 = '(?<d_4>0?4(th)?)'
+$d05 = '(?<d_5>0?5(th)?)'
+$d06 = '(?<d_6>0?6(th)?)'
+$d07 = '(?<d_7>0?7(th)?)'
+$d08 = '(?<d_8>0?8(th)?)'
+$d09 = '(?<d_9>0?9(th)?)'
 $d10 = '(?<d_10>10(th)?)'
 $d11 = '(?<d_11>11(th)?)'
 $d12 = '(?<d_12>12(th)?)'
@@ -88,27 +101,26 @@ $datefmt = {
 }
 
 while line = gets() do
+    match_cnt = 0
     $datefmt.each do |fmt, re|
         if ( re =~ line )
             match = Regexp.last_match
-            year = $~[:year]
-            month = $~[:month]
-            day = $~[:day]
-            found = $~
+            a = Hash.new
+            #FIXME should just copy $~ object to a?
+            a[:date_str] = $~
+            a[:line] = $~.string
+            a[:year] = $~[:year]
+            a[:month] = $~[:month]
+            a[:day] = $~[:day]
+            a[:pre] = $~.pre_match
+            a[:post] = $~.post_match
 
-            match.captures.each_with_index do |cap, i|
-                if cap.nil?
-                else
-                    if match.names[i] =~ /^m_/
-                        month = match.names[i].to_s
-                        month.sub!(/^m_(0)?/, "")
-                    end
-                end
-            end
-
-            year = parse_year(year)
-            day = parse_day(day)
-            puts "#{found}: #{fmt}: #{year}-#{month}-#{day}: #{line}"
+            match_cnt += 1
+            a[:month] = parse_month(match)
+            a[:year] = parse_year(a[:year])
+            a[:day] = parse_day(a[:day])
+            a[:match_cnt] = match_cnt
+            printout(a)
         end
     end
 end
