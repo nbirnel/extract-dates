@@ -1,8 +1,21 @@
 #!/usr/bin/ruby
 
+def parse_year(y) 
+    if y !~ /^(19|20)[0-9][0-9]$/
+        y.sub!(/^['`]/, "")
+        if y.to_i < 69
+            cent = "20"
+        else
+            cent = "19"
+        end
+        y.sub!(/^/, cent)
+    end
+    return y
+end
+
 $hy = ',?[- .\\/]'
 
-$y = '(?<year>(19|20|\')?[0-9][0-9])'      #19, 20, or ',  plus 2 digits
+$y = '(?<year>(19|20|[\'`])?[0-9][0-9])'      #19, 20, or ',  plus 2 digits
 
 $jan = '(?<m_jan>0?1|january|jan)'
 $feb = '(?<m_feb>0?2|february|feb)'
@@ -65,7 +78,8 @@ $datefmt = {
 while line = gets() do
     $datefmt.each do |fmt, re|
         if ( re =~ line )
-            puts "#{$~}: #{fmt}: #{$~[:year]}-#{$~[:month]}-#{$~[:day]}: #{line}"
+            year = parse_year($~[:year])
+            puts "#{$~}: #{fmt}: #{year}-#{$~[:month]}-#{$~[:day]}: #{line}"
         end
     end
 end
