@@ -1,2 +1,2 @@
-capture fields
 normalize output
+add output format flags - as date(1) plus original line, before, after
