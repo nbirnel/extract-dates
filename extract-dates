@@ -13,6 +13,12 @@ def parse_year(y)
     return y
 end
 
+def parse_day(d)
+    d.sub!(/[a-zA-Z]*$/, "")
+    d.sub!(/^0/, "")
+    return d
+end
+
 $hy = ',?[- .\\/]'
 
 $y = '(?<year>(19|20|[\'`])?[0-9][0-9])'      #19, 20, or ',  plus 2 digits
@@ -79,7 +85,8 @@ while line = gets() do
     $datefmt.each do |fmt, re|
         if ( re =~ line )
             year = parse_year($~[:year])
-            puts "#{$~}: #{fmt}: #{year}-#{$~[:month]}-#{$~[:day]}: #{line}"
+            day = parse_day($~[:day])
+            puts "#{$~}: #{fmt}: #{year}-#{$~[:month]}-#{day}: #{line}"
         end
     end
 end
