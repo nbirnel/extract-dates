@@ -33,7 +33,9 @@ def parse_month(m)
 end
 
 def printout(a)
-    puts "#{a[:date_str]}: #{a[:fmt]}: #{a[:year]}-#{a[:month]}-#{a[:day]}: #{a[:line]}"
+    #puts "#{a[:date_str]}: #{a[:fmt]}: #{a[:year]}-#{a[:month]}-#{a[:day]}: #{a[:line]}"
+    #puts "#{a[:date_str]}: #{a[:fmt]}: #{a[:year]}-#{sprintf "%02d", a[:month]}-#{sprintf "%02d", a[:day]}: #{a[:line]}"
+    puts "#{a[:year]}-#{sprintf "%02d", a[:month]}-#{sprintf "%02d", a[:day]}: #{a[:line]}"
 end
 
 $hy = ',?[- .\\/]'
@@ -92,12 +94,9 @@ $d31 = '(?<d_31>31(st)?)'
 $d = "(?<day>#{$d01}|#{$d02}|#{$d03}|#{$d04}|#{$d05}|#{$d06}|#{$d07}|#{$d08}|#{$d09}|#{$d10}|#{$d11}|#{$d12}|#{$d13}|#{$d14}|#{$d15}|#{$d16}|#{$d17}|#{$d18}|#{$d19}|#{$d20}|#{$d21}|#{$d22}|#{$d23}|#{$d24}|#{$d25}|#{$d26}|#{$d27}|#{$d28}|#{$d29}|#{$d30}|#{$d31})"
 
 $datefmt = {
-    yyyy_mm_dd: Regexp.new('\b' + $y + $hy + $m + $hy + $d + '\b', true),
-    yyyy_dd_mm: Regexp.new('\b' + $y + $hy + $d + $hy + $m + '\b', true),
-    dd_yyyy_mm: Regexp.new('\b' + $d + $hy + $y + $hy + $m + '\b', true),
-    dd_mm_yyyy: Regexp.new('\b' + $d + $hy + $m + $hy + $y + '\b', true),
     mm_dd_yyyy: Regexp.new('\b' + $m + $hy + $d + $hy + $y + '\b', true),
-    mm_yyyy_dd: Regexp.new('\b' + $m + $hy + $y + $hy + $d + '\b', true),
+    yyyy_mm_dd: Regexp.new('\b' + $y + $hy + $m + $hy + $d + '\b', true),
+    dd_mm_yyyy: Regexp.new('\b' + $d + $hy + $m + $hy + $y + '\b', true),
 }
 
 while line = gets() do
