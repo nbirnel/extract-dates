@@ -38,6 +38,10 @@ def printout(a)
     puts "#{a[:year]}-#{sprintf "%02d", a[:month]}-#{sprintf "%02d", a[:day]}: #{a[:line]}"
 end
 
+#FIXME this does not catch August 13,2010 - comma with no space.
+#(this happens in OCR, probably not so much in typed docs)
+#Perhaps there should not be a generic hyphen variable, but rather multiple 
+#whole-date formats.
 $hy = ',?[- .\\/]'
 
 $y = '(?<year>(19|20|[\'`])?[0-9][0-9])'  #19 or 20 or ` or ',  plus 2 digits
